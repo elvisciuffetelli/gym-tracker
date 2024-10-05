@@ -2,12 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { TabsContent } from "@/components/ui/tabs";
 import type { Exercise } from "@/types";
 //@ts-ignore
 import { useFormState } from "react-dom";
-import { addExercise, deleteExercise } from "./_actions";
+import { addExercise, deleteExercise, updateExercise } from "./_actions";
 
 type Props = {
 	exercises: Exercise[];
@@ -50,30 +58,95 @@ export function ExercisesTab({ exercises }: Props) {
 								<p className="text-red-500">{deleteExerciseState.message}</p>
 							)}
 							{exercises.map((exercise) => (
-								<form action={deleteExerciseFormAction} key={exercise.id}>
-									<li className="flex justify-between items-center">
-										<span>
-											<span className="font-bold capitalize">
-												{exercise.name}
-											</span>
-											{exercise.maximal
-												? ` - Maximal: ${exercise.maximal} Kg`
-												: ""}
+								<li
+									className="flex justify-between items-center"
+									key={exercise.id}
+								>
+									<span>
+										<span className="font-bold capitalize">
+											{exercise.name}
 										</span>
-										<input
-											type="hidden"
-											name="exercise-id"
-											value={exercise.id}
-										/>
-										<Button
-											type="submit"
-											className="ml-4"
-											variant="destructive"
-										>
-											Delete
-										</Button>
-									</li>
-								</form>
+										{exercise.maximal
+											? ` - Maximal: ${exercise.maximal} Kg`
+											: ""}
+									</span>
+									<div className="flex">
+										<Dialog>
+											<DialogTrigger asChild>
+												<Button
+													type="button"
+													className="ml-4"
+													variant="secondary"
+												>
+													Edit
+												</Button>
+											</DialogTrigger>
+											<DialogContent>
+												<DialogHeader>
+													<DialogTitle>Edit exercise</DialogTitle>
+												</DialogHeader>
+												<form className="space-y-4" action={updateExercise}>
+													<input
+														type="hidden"
+														name="exercise-id"
+														value={exercise.id}
+													/>
+													<div>
+														<label
+															htmlFor="exercise"
+															className="block text-sm font-medium text-gray-700"
+														>
+															Exercise Name
+														</label>
+														<Input
+															id="exercise"
+															name="exercise"
+															className="mt-1"
+															defaultValue={exercise.name}
+														/>
+													</div>
+													<div>
+														<label
+															htmlFor="maximal"
+															className="block text-sm font-medium text-gray-700"
+														>
+															Maximal (Kg)
+														</label>
+														<Input
+															id="maximal"
+															type="number"
+															name="maximal"
+															defaultValue={exercise.maximal}
+															min="0"
+															step="0.1"
+															className="mt-1"
+														/>
+													</div>
+													<DialogClose asChild>
+														<Button type="submit" className="w-full">
+															Update Exercise
+														</Button>
+													</DialogClose>
+												</form>
+											</DialogContent>
+										</Dialog>
+
+										<form action={deleteExerciseFormAction}>
+											<input
+												type="hidden"
+												name="exercise-id"
+												value={exercise.id}
+											/>
+											<Button
+												type="submit"
+												className="ml-4"
+												variant="destructive"
+											>
+												Delete
+											</Button>
+										</form>
+									</div>
+								</li>
 							))}
 						</ul>
 					</div>

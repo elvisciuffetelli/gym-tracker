@@ -15,7 +15,7 @@ export async function addExercise(
 		redirect("/");
 	}
 
-	const name = formData.get("exercise") as string;
+	const name = (formData.get("exercise") as string).trim().toLowerCase();
 	const maximal = formData.get("maximal") as string;
 
 	const { error: exercisesError } = await (await supabase)
@@ -117,6 +117,33 @@ export async function deleteWorkout(
 		return {
 			message: `${deleteWorkoutError.details} ${deleteWorkoutError.message}`,
 		};
+	}
+
+	revalidatePath("/", "layout");
+}
+
+export async function updateExercise(formData: FormData) {
+	const supabase = createClient();
+
+	const { data, error } = await (await supabase).auth.getUser();
+	if (error || !data?.user) {
+		redirect("/");
+	}
+
+	const selectedExercise = formData.get("exercise-id") as string;
+	const name = (formData.get("exercise") as string).trim().toLowerCase();
+	const maximal = formData.get("maximal") as string;
+
+	const { error: updateExerciseError } = await (await supabase)
+		.from("exercises")
+		.update({
+			name,
+			maximal: Number.parseFloat(maximal),
+		})
+		.match({ id: selectedExercise });
+
+	if (updateExerciseError) {
+		redirect("/error");
 	}
 
 	revalidatePath("/", "layout");
