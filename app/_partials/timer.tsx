@@ -7,36 +7,50 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Clock } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 const Timer = () => {
-	const createAlarmSound = () => {
-		const audioContext = new window.AudioContext();
-
-		return () => {
-			const oscillator = audioContext.createOscillator();
-			const gainNode = audioContext.createGain();
-
-			oscillator.connect(gainNode);
-			gainNode.connect(audioContext.destination);
-
-			oscillator.type = "sine";
-			oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // 440 Hz - A4 note
-
-			gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-			gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + 0.01);
-			gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
-
-			oscillator.start(audioContext.currentTime);
-			oscillator.stop(audioContext.currentTime + 0.5);
-		};
-	};
 	const [isOpen, setIsOpen] = useState(false);
 	const [time, setTime] = useState(90); // Default 1:30 minutes in seconds
 	const [isRunning, setIsRunning] = useState(false);
 	const [isRinging, setIsRinging] = useState(false);
 
-	const playAlarm = createAlarmSound();
+	const audioRef = useRef<HTMLAudioElement | null>(null);
+
+	useEffect(() => {
+		// Create audio element when component mounts
+		audioRef.current = new Audio("/alarm.wav");
+
+		return () => {
+			// Cleanup when component unmounts
+			if (audioRef.current) {
+				audioRef.current.pause();
+				audioRef.current = null;
+			}
+		};
+	}, []);
+
+	const handleSnooze = () => {
+		setTime(90);
+		setIsRinging(false);
+		stopAlarm();
+	};
+
+	const playAlarm = useCallback(() => {
+		if (audioRef.current) {
+			audioRef.current.currentTime = 0; // Reset audio to start
+			audioRef.current
+				.play()
+				.catch((error) => console.error("Error playing audio:", error));
+		}
+	}, []);
+
+	const stopAlarm = useCallback(() => {
+		if (audioRef.current) {
+			audioRef.current.pause();
+			audioRef.current.currentTime = 0; // Reset audio to start
+		}
+	}, []);
 
 	useEffect(() => {
 		let interval: number | undefined;
@@ -68,12 +82,14 @@ const Timer = () => {
 	const handleStop = () => {
 		setIsRunning(false);
 		setIsRinging(false);
+		stopAlarm();
 	};
 
 	const handleReset = () => {
 		setTime(90);
 		setIsRunning(false);
 		setIsRinging(false);
+		stopAlarm();
 	};
 
 	const adjustTime = (seconds: number) => {
@@ -107,7 +123,10 @@ const Timer = () => {
 			<div className="text-lg font-semibold">
 				{isRinging ? "Time's up!" : formatTime(time)}
 			</div>
-			{!isRunning && <Button onClick={handleStart}>Start Timer</Button>}
+			{isRinging && <Button onClick={handleSnooze}>Snooze</Button>}
+			{!isRunning && !isRinging && (
+				<Button onClick={handleStart}>Start Timer</Button>
+			)}
 			{isRunning && <Button onClick={handleStop}>Stop</Button>}
 			<Button onClick={handleReset} variant="destructive">
 				Reset
