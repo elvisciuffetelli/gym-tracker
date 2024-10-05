@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Exercise, User, Workout } from "@/types";
 import { createClient } from "@/utils/supabase/client";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ExercisesTab } from "./exercisesTab";
 import { WorkoutsTab } from "./workoutsTab";
@@ -26,9 +27,17 @@ export function Dashboard({ exercises, workouts }: Props) {
 
 	return (
 		<div className="container mx-auto p-4">
-			<div className="flex justify-between">
-				<h1 className="text-3xl font-bold mb-8">Gym Tracker</h1>
-				<Button onClick={handleLogout} className="mb-8" variant="outline">
+			<div className="flex justify-between mb-8 items-center">
+				<div className="flex justify-between items-center align-middle space-x-2">
+					<Image
+						src="/logo.png" // The path to your logo image
+						alt="Gym Tracker Logo"
+						width={60} // Adjust the size as needed
+						height={60} // Adjust the size as needed
+					/>
+					<h1 className="text-3xl font-bold">Gym Tracker</h1>
+				</div>
+				<Button onClick={handleLogout} className="" variant="outline">
 					Logout
 				</Button>
 			</div>
