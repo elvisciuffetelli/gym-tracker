@@ -1,6 +1,7 @@
 export type Exercise = {
 	id: string;
 	name: string;
+	maximal?: number;
 };
 
 export type Workout = {

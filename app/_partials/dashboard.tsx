@@ -26,10 +26,12 @@ export function Dashboard({ exercises, workouts }: Props) {
 
 	return (
 		<div className="container mx-auto p-4">
-			<h1 className="text-3xl font-bold mb-8">Gym Tracker Dashboard</h1>
-			<Button onClick={handleLogout} className="mb-8">
-				Logout
-			</Button>
+			<div className="flex justify-between">
+				<h1 className="text-3xl font-bold mb-8">Gym Tracker</h1>
+				<Button onClick={handleLogout} className="mb-8" variant="outline">
+					Logout
+				</Button>
+			</div>
 			{/* 			{error && <p className="text-red-500">{error}</p>} */}
 			<Tabs defaultValue="exercises" className="space-y-4">
 				<TabsList>

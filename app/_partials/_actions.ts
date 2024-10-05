@@ -15,11 +15,15 @@ export async function addExercise(
 		redirect("/");
 	}
 
+	const name = formData.get("exercise") as string;
+	const maximal = formData.get("maximal") as string;
+
 	const { error: exercisesError } = await (await supabase)
 		.from("exercises")
 		.insert({
-			name: formData.get("exercise") as string,
+			name: name,
 			user_id: data.user.id,
+			maximal: Number.parseFloat(maximal),
 		});
 
 	if (exercisesError) {
@@ -85,6 +89,34 @@ export async function addWorkout(formData: FormData) {
 
 	if (addWorkoutError) {
 		redirect("/error");
+	}
+
+	revalidatePath("/", "layout");
+}
+
+export async function deleteWorkout(
+	prevState: { message: string },
+	formData: FormData,
+) {
+	const supabase = createClient();
+
+	const { data, error } = await (await supabase).auth.getUser();
+	if (error || !data?.user) {
+		redirect("/");
+	}
+
+	const workoutId = formData.get("workout-id") as string;
+
+	const { error: deleteWorkoutError } = await (await supabase)
+		.from("workouts")
+		.delete()
+		.match({ id: workoutId });
+
+	if (deleteWorkoutError) {
+		console.error("Error deleting workout:", deleteWorkoutError);
+		return {
+			message: `${deleteWorkoutError.details} ${deleteWorkoutError.message}`,
+		};
 	}
 
 	revalidatePath("/", "layout");

@@ -5,7 +5,10 @@ import { Label } from "@/components/ui/label";
 import { TabsContent } from "@/components/ui/tabs";
 import type { Exercise, Workout } from "@/types";
 import { format } from "date-fns";
-import { addWorkout } from "./_actions";
+//@ts-ignore
+import { useFormState } from "react-dom";
+import { addWorkout, deleteWorkout } from "./_actions";
+import Timer from "./timer";
 
 type Props = {
 	exercises: Exercise[];
@@ -13,17 +16,25 @@ type Props = {
 };
 
 type GroupedWorkouts = {
-	[key: string]: Workout[];
+	[date: string]: {
+		[exerciseName: string]: Workout[];
+	};
 };
 
 export function WorkoutsTab({ exercises, workouts }: Props) {
+	const [state, formAction] = useFormState(deleteWorkout, { message: "" });
+
 	const groupedWorkouts = workouts.reduce((acc: GroupedWorkouts, workout) => {
-		// Format the date with the day of the week
 		const date = format(new Date(workout.created_at), "dd/MM/yyyy EEEE");
+		const exerciseName =
+			exercises.find((e) => e.id === workout.exercise_id)?.name || "Unknown";
 		if (!acc[date]) {
-			acc[date] = [];
+			acc[date] = {};
 		}
-		acc[date].push(workout);
+		if (!acc[date][exerciseName]) {
+			acc[date][exerciseName] = [];
+		}
+		acc[date][exerciseName].push(workout);
 		return acc;
 	}, {} as GroupedWorkouts);
 
@@ -68,26 +79,72 @@ export function WorkoutsTab({ exercises, workouts }: Props) {
 							Add Workout
 						</Button>
 					</form>
+					<Timer />
 					<div className="mt-8">
 						<h3 className="text-xl font-semibold mb-4">Recent Workouts</h3>
 						<ul className="space-y-2">
-							{Object.entries(groupedWorkouts).map(([date, workouts]) => (
-								<div key={date}>
-									<h4 className="text-lg font-semibold mb-2">{date}</h4>
-									<ul className="space-y-2">
-										{(workouts as Workout[]).map((workout: Workout) => (
-											<li key={workout.id} className="bg-secondary p-2 rounded">
-												{
-													exercises.find((e) => e.id === workout.exercise_id)
-														?.name
-												}{" "}
-												- {workout.sets} sets, {workout.reps} reps,{" "}
-												{workout.weight}kg
-											</li>
-										))}
-									</ul>
-								</div>
-							))}
+							{Object.entries(groupedWorkouts).map(
+								([date, exercisesByDate]) => (
+									<div key={date}>
+										<h4 className="text-lg font-semibold mb-2">{date}</h4>
+										{Object.entries(exercisesByDate).map(
+											([exerciseName, workouts]) => (
+												<div key={exerciseName} className="mt-2">
+													<h5 className="text-md font-semibold capitalize">
+														{exerciseName}
+													</h5>
+													<ul className="space-y-2">
+														{(workouts as Workout[]).map((workout: Workout) => {
+															// Find the corresponding exercise for the workout
+															const exerciseForWorkout = exercises.find(
+																(e) => e.id === workout.exercise_id,
+															);
+															// Calculate the percentage if maximal is available
+															const percentageOfMaximal =
+																exerciseForWorkout?.maximal
+																	? (
+																			(workout.weight /
+																				exerciseForWorkout.maximal) *
+																			100
+																		).toFixed(1)
+																	: null;
+															return (
+																<li
+																	key={workout.id}
+																	className="bg-secondary p-2 rounded flex justify-between items-center"
+																>
+																	{workout.sets} sets, {workout.reps} reps,{" "}
+																	{workout.weight}kg
+																	{/* Display the percentage of the maximal if available */}
+																	{percentageOfMaximal && (
+																		<span>
+																			{percentageOfMaximal}% of maximal
+																		</span>
+																	)}
+																	<form action={formAction}>
+																		<input
+																			type="hidden"
+																			name="workout-id"
+																			value={workout.id}
+																		/>
+																		<Button
+																			type="submit"
+																			className="ml-4"
+																			variant="destructive"
+																		>
+																			Delete
+																		</Button>
+																	</form>
+																</li>
+															);
+														})}
+													</ul>
+												</div>
+											),
+										)}
+									</div>
+								),
+							)}
 						</ul>
 					</div>
 				</CardContent>

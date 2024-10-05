@@ -22,7 +22,7 @@ export default function Page() {
 					</CardTitle>
 				</CardHeader>
 				<CardContent className="text-center">
-					<p>Wee&apos;re sorry, but an unexpected error occurred.</p>
+					<p>We&apos;re sorry, but an unexpected error occurred.</p>
 					<p className="mt-2">
 						Our team has been notified and wee&apos;re working to fix the issue.
 					</p>

@@ -36,6 +36,13 @@ export function ExercisesTab({ exercises }: Props) {
 						)}
 						<form action={addExerciseFormAction} className="flex space-x-2">
 							<Input placeholder="New exercise name" name="exercise" />
+							<Input
+								type="number"
+								placeholder="Maximal"
+								name="maximal"
+								min="0"
+								step="0.1"
+							/>
 							<Button type="submit">Add Exercise</Button>
 						</form>
 						<ul className="list-disc pl-5 space-y-2">
@@ -45,7 +52,14 @@ export function ExercisesTab({ exercises }: Props) {
 							{exercises.map((exercise) => (
 								<form action={deleteExerciseFormAction} key={exercise.id}>
 									<li className="flex justify-between items-center">
-										{exercise.name}
+										<span>
+											<span className="font-bold capitalize">
+												{exercise.name}
+											</span>
+											{exercise.maximal
+												? ` - Maximal: ${exercise.maximal} Kg`
+												: ""}
+										</span>
 										<input
 											type="hidden"
 											name="exercise-id"
