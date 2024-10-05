@@ -38,9 +38,10 @@ export default function ErrorPage({
 						<p className="my-2 text-red-500">{error.message}</p>
 					) : (
 						<div>
-							<p>We're sorry, but an unexpected error occurred.</p>
+							<p>Wee&apos;re sorry, but an unexpected error occurred.</p>
 							<p className="mt-2">
-								Our team has been notified and we're working to fix the issue.
+								Our team has been notified and wee&apos;re working to fix the
+								issue.
 							</p>
 						</div>
 					)}

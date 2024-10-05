@@ -13,8 +13,8 @@ export default function Page() {
 				</CardHeader>
 				<CardContent className="space-y-4">
 					<p className="text-center">
-						Thank you for signing up! We've sent a confirmation email to your
-						address.
+						Thank you for signing up! We&apos;ve sent a confirmation email to
+						your address.
 					</p>
 					<p className="text-center">
 						Please check your inbox and click on the confirmation link to
