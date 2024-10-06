@@ -81,6 +81,11 @@ export function CalculatorTab(): JSX.Element {
 					<CardTitle>1 Rep Max Calculator</CardTitle>
 				</CardHeader>
 				<CardContent>
+					{Number.parseInt(reps, 10) > 10 && (
+						<div className="text-red-500 mb-2">
+							<p>Reps above 10 yields inaccurate results.</p>
+						</div>
+					)}
 					<div className="space-y-4">
 						<form className="space-y-4">
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">

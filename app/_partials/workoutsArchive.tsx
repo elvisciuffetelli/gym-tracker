@@ -1,12 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { TabsContent } from "@/components/ui/tabs";
 import type { Exercise, Workout } from "@/types";
 import { format } from "date-fns";
-import { addWorkout } from "./_actions";
-import Timer from "./timer";
+//@ts-ignore
+import { useFormState } from "react-dom";
+import { deleteWorkout } from "./_actions";
 
 type Props = {
 	exercises: Exercise[];
@@ -19,7 +18,9 @@ type GroupedWorkouts = {
 	};
 };
 
-export function WorkoutsTab({ exercises, workouts }: Props) {
+export function WorkoutsArchive({ exercises, workouts }: Props) {
+	const [state, formAction] = useFormState(deleteWorkout, { message: "" });
+
 	const groupedWorkouts = workouts.reduce((acc: GroupedWorkouts, workout) => {
 		const date = format(new Date(workout.created_at), "dd/MM/yyyy EEEE");
 		const exerciseName =
@@ -35,49 +36,14 @@ export function WorkoutsTab({ exercises, workouts }: Props) {
 	}, {} as GroupedWorkouts);
 
 	return (
-		<TabsContent value="workouts">
+		<TabsContent value="workouts-archive">
 			<Card>
 				<CardHeader>
-					<CardTitle>Workouts</CardTitle>
+					<CardTitle>Workouts Archive</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<form className="space-y-4" action={addWorkout}>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<div>
-								<Label htmlFor="exercise">Exercise</Label>
-								<select
-									id="exercise-id"
-									name="exercise-id"
-									className="w-full p-2 border rounded"
-								>
-									<option value="">Select an exercise</option>
-									{exercises.map((exercise) => (
-										<option key={exercise.id} value={exercise.id}>
-											{exercise.name}
-										</option>
-									))}
-								</select>
-							</div>
-							<div>
-								<Label htmlFor="sets">Sets</Label>
-								<Input id="sets" type="number" name="sets" />
-							</div>
-							<div>
-								<Label htmlFor="reps">Reps</Label>
-								<Input id="reps" type="number" name="reps" />
-							</div>
-							<div>
-								<Label htmlFor="weight">Weight (kg)</Label>
-								<Input id="weight" name="weight" type="number" step="0.1" />
-							</div>
-						</div>
-						<Button type="submit" className="w-full">
-							Add Workout
-						</Button>
-					</form>
-					<Timer />
 					<div className="mt-8">
-						<h3 className="text-xl font-semibold mb-4">Recent Workouts</h3>
+						<h3 className="text-xl font-semibold mb-4">All Workouts</h3>
 						<ul className="space-y-3 divide-y">
 							{Object.entries(groupedWorkouts).map(
 								([date, exercisesByDate]) => (
@@ -107,9 +73,9 @@ export function WorkoutsTab({ exercises, workouts }: Props) {
 															return (
 																<li
 																	key={workout.id}
-																	className="bg-secondary py-3 px-2 rounded"
+																	className="bg-secondary py-3 px-2 rounded flex flex-col md:flex-row justify-between items-center"
 																>
-																	<div>
+																	<div className="w-full pb-2 md:pb-0">
 																		<span>
 																			{workout.sets} sets, {workout.reps} reps,
 																		</span>
@@ -121,6 +87,23 @@ export function WorkoutsTab({ exercises, workouts }: Props) {
 																			</span>
 																		)}
 																	</div>
+																	<form
+																		action={formAction}
+																		className="w-full md:w-auto"
+																	>
+																		<input
+																			type="hidden"
+																			name="workout-id"
+																			value={workout.id}
+																		/>
+																		<Button
+																			type="submit"
+																			className="w-full md:w-auto"
+																			variant="destructive"
+																		>
+																			Delete
+																		</Button>
+																	</form>
 																</li>
 															);
 														})}
