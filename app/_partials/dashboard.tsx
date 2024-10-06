@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Exercise, User, Workout } from "@/types";
 import { createClient } from "@/utils/supabase/client";
+import { Calculator } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { CalculatorTab } from "./calculatorTab";
 import { ExercisesTab } from "./exercisesTab";
 import { WorkoutsTab } from "./workoutsTab";
 
@@ -46,10 +48,12 @@ export function Dashboard({ exercises, workouts }: Props) {
 				<TabsList>
 					<TabsTrigger value="exercises">Exercises</TabsTrigger>
 					<TabsTrigger value="workouts">Workouts</TabsTrigger>
+					<TabsTrigger value="calculator">Max calculator</TabsTrigger>
 				</TabsList>
 
 				<ExercisesTab exercises={exercises} />
 				<WorkoutsTab workouts={workouts} exercises={exercises} />
+				<CalculatorTab />
 			</Tabs>
 		</div>
 	);
