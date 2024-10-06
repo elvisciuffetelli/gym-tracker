@@ -46,7 +46,7 @@ export function WorkoutsTab({ exercises, workouts }: Props) {
 				</CardHeader>
 				<CardContent>
 					<form className="space-y-4" action={addWorkout}>
-						<div className="grid grid-cols-2 gap-4">
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 							<div>
 								<Label htmlFor="exercise">Exercise</Label>
 								<select
@@ -82,15 +82,15 @@ export function WorkoutsTab({ exercises, workouts }: Props) {
 					<Timer />
 					<div className="mt-8">
 						<h3 className="text-xl font-semibold mb-4">Recent Workouts</h3>
-						<ul className="space-y-2">
+						<ul className="space-y-3 divide-y">
 							{Object.entries(groupedWorkouts).map(
 								([date, exercisesByDate]) => (
 									<div key={date}>
-										<h4 className="text-lg font-semibold mb-2">{date}</h4>
+										<h4 className="text-lg font-semibold mb-2 pt-4">{date}</h4>
 										{Object.entries(exercisesByDate).map(
 											([exerciseName, workouts]) => (
 												<div key={exerciseName} className="mt-2">
-													<h5 className="text-md font-semibold capitalize">
+													<h5 className="text-md font-semibold capitalize mb-1 mt-2">
 														{exerciseName}
 													</h5>
 													<ul className="space-y-2">
@@ -111,17 +111,24 @@ export function WorkoutsTab({ exercises, workouts }: Props) {
 															return (
 																<li
 																	key={workout.id}
-																	className="bg-secondary p-2 rounded flex justify-between items-center"
+																	className="bg-secondary py-3 px-2 rounded flex flex-col md:flex-row justify-between items-center"
 																>
-																	{workout.sets} sets, {workout.reps} reps,{" "}
-																	{workout.weight}kg
-																	{/* Display the percentage of the maximal if available */}
-																	{percentageOfMaximal && (
+																	<div className="w-full pb-2 md:pb-0">
 																		<span>
-																			{percentageOfMaximal}% of maximal
+																			{workout.sets} sets, {workout.reps} reps,
 																		</span>
-																	)}
-																	<form action={formAction}>
+																		<span> {workout.weight}kg, </span>
+																		{/* Display the percentage of the maximal if available */}
+																		{percentageOfMaximal && (
+																			<span>
+																				{percentageOfMaximal}% of maximal
+																			</span>
+																		)}
+																	</div>
+																	<form
+																		action={formAction}
+																		className="w-full md:w-auto"
+																	>
 																		<input
 																			type="hidden"
 																			name="workout-id"
@@ -129,7 +136,7 @@ export function WorkoutsTab({ exercises, workouts }: Props) {
 																		/>
 																		<Button
 																			type="submit"
-																			className="ml-4"
+																			className="w-full md:w-auto"
 																			variant="destructive"
 																		>
 																			Delete

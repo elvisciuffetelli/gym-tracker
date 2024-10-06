@@ -30,10 +30,10 @@ export function Dashboard({ exercises, workouts }: Props) {
 			<div className="flex justify-between mb-8 items-center">
 				<div className="flex justify-between items-center align-middle space-x-2">
 					<Image
-						src="/logo.png" // The path to your logo image
+						src="/logo.png"
 						alt="Gym Tracker Logo"
-						width={60} // Adjust the size as needed
-						height={60} // Adjust the size as needed
+						width={60}
+						height={60}
 					/>
 					<h1 className="text-3xl font-bold">Gym Tracker</h1>
 				</div>

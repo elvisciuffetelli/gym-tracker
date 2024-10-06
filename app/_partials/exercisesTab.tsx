@@ -42,27 +42,31 @@ export function ExercisesTab({ exercises }: Props) {
 						{addExerciseState?.message && (
 							<p className="text-red-500">{addExerciseState.message}</p>
 						)}
-						<form action={addExerciseFormAction} className="flex space-x-2">
-							<Input placeholder="New exercise name" name="exercise" />
-							<Input
-								type="number"
-								placeholder="Maximal"
-								name="maximal"
-								min="0"
-								step="0.1"
-							/>
-							<Button type="submit">Add Exercise</Button>
+						<form action={addExerciseFormAction} className="space-y-4">
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+								<Input placeholder="New exercise name" name="exercise" />
+								<Input
+									type="number"
+									placeholder="Maximal"
+									name="maximal"
+									min="0"
+									step="0.1"
+								/>
+							</div>
+							<Button type="submit" className="w-full">
+								Add Exercise
+							</Button>
 						</form>
-						<ul className="list-disc pl-5 space-y-2">
+						<ul className="divide-y pt-6">
 							{deleteExerciseState?.message && (
 								<p className="text-red-500">{deleteExerciseState.message}</p>
 							)}
 							{exercises.map((exercise) => (
 								<li
-									className="flex justify-between items-center"
+									className="flex flex-col md:flex-row md:justify-between py-3"
 									key={exercise.id}
 								>
-									<span>
+									<span className="pb-3 md:pb-0 text-center md:text-left">
 										<span className="font-bold capitalize">
 											{exercise.name}
 										</span>
@@ -70,12 +74,12 @@ export function ExercisesTab({ exercises }: Props) {
 											? ` - Maximal: ${exercise.maximal} Kg`
 											: ""}
 									</span>
-									<div className="flex">
+									<div className="flex space-x-2">
 										<Dialog>
 											<DialogTrigger asChild>
 												<Button
 													type="button"
-													className="ml-4"
+													className="w-full md:w-auto"
 													variant="secondary"
 												>
 													Edit
@@ -123,7 +127,7 @@ export function ExercisesTab({ exercises }: Props) {
 														/>
 													</div>
 													<DialogClose asChild>
-														<Button type="submit" className="w-full">
+														<Button type="submit" className="w-full md:w-auto">
 															Update Exercise
 														</Button>
 													</DialogClose>
@@ -131,7 +135,7 @@ export function ExercisesTab({ exercises }: Props) {
 											</DialogContent>
 										</Dialog>
 
-										<form action={deleteExerciseFormAction}>
+										<form action={deleteExerciseFormAction} className="w-full">
 											<input
 												type="hidden"
 												name="exercise-id"
@@ -139,7 +143,7 @@ export function ExercisesTab({ exercises }: Props) {
 											/>
 											<Button
 												type="submit"
-												className="ml-4"
+												className="w-full md:w-auto"
 												variant="destructive"
 											>
 												Delete
