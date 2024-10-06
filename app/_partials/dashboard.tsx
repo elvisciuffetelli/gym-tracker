@@ -28,7 +28,7 @@ export function Dashboard({ exercises, workouts }: Props) {
 	};
 
 	return (
-		<div className="container mx-auto p-4">
+		<div className="container mx-auto px-2 py-4 md:p-4">
 			<div className="flex justify-between mb-8 items-center">
 				<div className="flex justify-between items-center align-middle space-x-2">
 					<Image
@@ -47,9 +47,9 @@ export function Dashboard({ exercises, workouts }: Props) {
 			<Tabs defaultValue="exercises" className="space-y-4">
 				<TabsList>
 					<TabsTrigger value="exercises">Exercises</TabsTrigger>
-					<TabsTrigger value="workouts">Workouts</TabsTrigger>
-					<TabsTrigger value="workouts-archive">Workouts Archive</TabsTrigger>
-					<TabsTrigger value="calculator">Max calculator</TabsTrigger>
+					<TabsTrigger value="workouts">Workout</TabsTrigger>
+					<TabsTrigger value="workouts-archive">Archive</TabsTrigger>
+					<TabsTrigger value="calculator">Calc</TabsTrigger>
 				</TabsList>
 
 				<ExercisesTab exercises={exercises} />
