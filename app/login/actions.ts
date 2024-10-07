@@ -55,11 +55,11 @@ export async function googleSignIn(formData: FormData) {
 		provider: "google",
 		options: {
 			redirectTo: "https://blue-bear-gym.netlify.app/auth/callback",
+			//redirectTo: "http://localhost:3000/auth/callback",
 		},
 	});
 
 	if (data.url) {
-		console.log("data.url", data.url);
 		redirect(data.url); // use the redirect API for your server framework
 	}
 
