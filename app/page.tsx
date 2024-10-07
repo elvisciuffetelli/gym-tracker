@@ -15,9 +15,13 @@ export default async function Page() {
 		.from("exercises")
 		.select();
 
+	const twoWeeksAgo = new Date();
+	twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
 	const { data: workoutsData, error: workoutsError } = await (await supabase)
 		.from("workouts")
-		.select();
+		.select()
+		.gte("created_at", twoWeeksAgo.toISOString());
 
 	if (exerciseError || workoutsError) {
 		console.error(

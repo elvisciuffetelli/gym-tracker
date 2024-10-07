@@ -8,8 +8,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { CalculatorTab } from "./calculatorTab";
 import { ExercisesTab } from "./exercisesTab";
+import { WorkoutTab } from "./workout";
 import { WorkoutsArchive } from "./workoutsArchive";
-import { WorkoutsTab } from "./workoutsTab";
 
 type Props = {
 	user: User;
@@ -49,11 +49,11 @@ export function Dashboard({ exercises, workouts }: Props) {
 					<TabsTrigger value="exercises">Exercises</TabsTrigger>
 					<TabsTrigger value="workouts">Workout</TabsTrigger>
 					<TabsTrigger value="workouts-archive">Archive</TabsTrigger>
-					<TabsTrigger value="calculator">Calc</TabsTrigger>
+					<TabsTrigger value="calculator">Calculator</TabsTrigger>
 				</TabsList>
 
 				<ExercisesTab exercises={exercises} />
-				<WorkoutsTab workouts={workouts} exercises={exercises} />
+				<WorkoutTab workouts={workouts} exercises={exercises} />
 				<WorkoutsArchive workouts={workouts} exercises={exercises} />
 				<CalculatorTab />
 			</Tabs>

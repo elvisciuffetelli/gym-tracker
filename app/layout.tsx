@@ -21,6 +21,7 @@ export default function RootLayout({
 			<body className={cn(inter.className, "bg-background")}>
 				<ThemeProvider
 					defaultTheme="system"
+					attribute="class"
 					enableSystem
 					disableTransitionOnChange
 				>
