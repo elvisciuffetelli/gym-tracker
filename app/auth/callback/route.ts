@@ -1,36 +1,17 @@
-// The client you created from the Server-Side Auth instructions
-import { createClient } from "@/utils/supabase/server";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-	const { searchParams, origin } = new URL(request.url);
-	const code = searchParams.get("code");
-	// if "next" is in param, use it as the redirect URL
-	const next = searchParams.get("next") ?? "/exercises";
+	const requestUrl = new URL(request.url);
+	const code = requestUrl.searchParams.get("code");
 
 	if (code) {
-		const supabase = createClient();
-		const { error } = await (await supabase).auth.exchangeCodeForSession(code);
-		if (!error) {
-			const forwardedHost = request.headers.get("x-forwarded-host"); // original origin before load balancer
-			const isLocalEnv = process.env.NODE_ENV === "development";
-			console.log("isLocalEnv", isLocalEnv);
-			console.log("forwardedHost", `https://${forwardedHost}${next}`);
-			console.log("isLocalEnv url", `${origin}${next}`);
-			if (isLocalEnv) {
-				// we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
-				return NextResponse.redirect(`${origin}${next}`);
-				// biome-ignore lint/style/noUselessElse: <explanation>
-			} else if (forwardedHost) {
-				return NextResponse.redirect(`https://${forwardedHost}${next}`);
-				// biome-ignore lint/style/noUselessElse: <explanation>
-			} else {
-				return NextResponse.redirect(`${origin}${next}`);
-			}
-		}
+		const cookieStore = cookies();
+		const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+		await supabase.auth.exchangeCodeForSession(code);
 	}
 
-	// return the user to an error page with instructions
-	//return NextResponse.redirect(`${origin}/auth/auth-code-error`);
-	return NextResponse.redirect(`${origin}/error`);
+	// Redirect to the exercises page after successful authentication
+	return NextResponse.redirect(`${requestUrl.origin}/exercises`);
 }
