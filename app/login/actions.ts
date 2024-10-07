@@ -66,7 +66,4 @@ export async function googleSignIn(formData: FormData) {
 	if (error) {
 		throw new Error(error.message);
 	}
-
-	revalidatePath("/", "layout");
-	redirect("/");
 }
