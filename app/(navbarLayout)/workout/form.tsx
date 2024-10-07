@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { Exercise } from "@/types";
-import { addWorkout } from "../_actions";
+import { addWorkout } from "../../_actions";
 
 type Props = {
 	exercises: Exercise[];

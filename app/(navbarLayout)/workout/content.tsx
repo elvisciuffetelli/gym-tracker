@@ -1,10 +1,11 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TabsContent } from "@/components/ui/tabs";
 import type { Exercise, Workout } from "@/types";
 import { format } from "date-fns";
-import Timer from "../timer";
 import { WorkoutForm } from "./form";
 import { RecentWorkoutsList } from "./recentWorkoutsList";
+import Timer from "./timer";
 
 type Props = {
 	exercises: Exercise[];
@@ -17,7 +18,7 @@ type GroupedWorkouts = {
 	};
 };
 
-export function WorkoutTab({ exercises, workouts }: Props) {
+export function Content({ exercises, workouts }: Props) {
 	const groupedWorkouts = workouts.reduce((acc: GroupedWorkouts, workout) => {
 		const date = format(new Date(workout.created_at), "dd/MM/yyyy EEEE");
 		const exerciseName =
@@ -33,20 +34,18 @@ export function WorkoutTab({ exercises, workouts }: Props) {
 	}, {} as GroupedWorkouts);
 
 	return (
-		<TabsContent value="workouts">
-			<Card>
-				<CardHeader>
-					<CardTitle>Workouts</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<WorkoutForm exercises={exercises} />
-					<Timer />
-					<RecentWorkoutsList
-						groupedWorkouts={groupedWorkouts}
-						exercises={exercises}
-					/>
-				</CardContent>
-			</Card>
-		</TabsContent>
+		<Card>
+			<CardHeader>
+				<CardTitle>Workouts</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<WorkoutForm exercises={exercises} />
+				<Timer />
+				<RecentWorkoutsList
+					groupedWorkouts={groupedWorkouts}
+					exercises={exercises}
+				/>
+			</CardContent>
+		</Card>
 	);
 }

@@ -10,7 +10,7 @@ type DropSet = {
 	weight: number;
 };
 
-export function CalculatorTab(): JSX.Element {
+export default function Page() {
 	const [weight, setWeight] = useState<string>("");
 	const [reps, setReps] = useState<string>("");
 	const [oneRepMax, setOneRepMax] = useState<number | null>(null);
@@ -75,66 +75,64 @@ export function CalculatorTab(): JSX.Element {
 	};
 
 	return (
-		<TabsContent value="calculator">
-			<Card>
-				<CardHeader>
-					<CardTitle>1 Rep Max Calculator</CardTitle>
-				</CardHeader>
-				<CardContent>
-					{Number.parseInt(reps, 10) > 10 && (
-						<div className="text-red-500 mb-2">
-							<p>Reps above 10 yields inaccurate results.</p>
+		<Card>
+			<CardHeader>
+				<CardTitle>1 Rep Max Calculator</CardTitle>
+			</CardHeader>
+			<CardContent>
+				{Number.parseInt(reps, 10) > 10 && (
+					<div className="text-red-500 mb-2">
+						<p>Reps above 10 yields inaccurate results.</p>
+					</div>
+				)}
+				<div className="space-y-4">
+					<form className="space-y-4">
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<Input
+								placeholder="Reps"
+								name="reps"
+								type="number"
+								min="1"
+								value={reps}
+								onChange={(e) => handleInputChange(e, setReps, "reps")}
+							/>
+							<Input
+								type="number"
+								placeholder="Weight"
+								name="weight"
+								min="0"
+								step="0.1"
+								value={weight}
+								onChange={(e) => handleInputChange(e, setWeight, "weight")}
+							/>
+						</div>
+					</form>
+					{oneRepMax !== null && (
+						<div className="mt-4 p-4 bg-secondary rounded-md">
+							<p className="text-lg font-semibold mb-2">
+								Estimated 1 Rep Max: {oneRepMax} kg
+							</p>
+							{dropSets.length > 0 && (
+								<div className="mt-4">
+									<p className="font-medium mb-2">
+										Recommended weights per rep:
+									</p>
+									<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+										{dropSets.map((set) => (
+											<div
+												key={set.reps}
+												className="bg-background p-2 rounded-sm text-sm"
+											>
+												{set.reps}×{set.weight}kg
+											</div>
+										))}
+									</div>
+								</div>
+							)}
 						</div>
 					)}
-					<div className="space-y-4">
-						<form className="space-y-4">
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-								<Input
-									placeholder="Reps"
-									name="reps"
-									type="number"
-									min="1"
-									value={reps}
-									onChange={(e) => handleInputChange(e, setReps, "reps")}
-								/>
-								<Input
-									type="number"
-									placeholder="Weight"
-									name="weight"
-									min="0"
-									step="0.1"
-									value={weight}
-									onChange={(e) => handleInputChange(e, setWeight, "weight")}
-								/>
-							</div>
-						</form>
-						{oneRepMax !== null && (
-							<div className="mt-4 p-4 bg-secondary rounded-md">
-								<p className="text-lg font-semibold mb-2">
-									Estimated 1 Rep Max: {oneRepMax} kg
-								</p>
-								{dropSets.length > 0 && (
-									<div className="mt-4">
-										<p className="font-medium mb-2">
-											Recommended weights per rep:
-										</p>
-										<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
-											{dropSets.map((set) => (
-												<div
-													key={set.reps}
-													className="bg-background p-2 rounded-sm text-sm"
-												>
-													{set.reps}×{set.weight}kg
-												</div>
-											))}
-										</div>
-									</div>
-								)}
-							</div>
-						)}
-					</div>
-				</CardContent>
-			</Card>
-		</TabsContent>
+				</div>
+			</CardContent>
+		</Card>
 	);
 }

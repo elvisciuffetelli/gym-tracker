@@ -32,7 +32,12 @@ export default function Login() {
 				<Button type="submit" className="w-full" formAction={login}>
 					Log in
 				</Button>
-				<Button type="submit" className="w-full" formAction={signup}>
+				<Button
+					type="submit"
+					className="w-full"
+					formAction={signup}
+					variant="secondary"
+				>
 					Sign Up
 				</Button>
 			</form>
