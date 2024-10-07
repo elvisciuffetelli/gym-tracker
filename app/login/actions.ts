@@ -54,7 +54,7 @@ export async function googleSignIn(formData: FormData) {
 	const { data, error } = await (await supabase).auth.signInWithOAuth({
 		provider: "google",
 		options: {
-			redirectTo: "https://blue-bear-gym.netlify.app/auth/callback",
+			redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
 			//redirectTo: "http://localhost:3000/auth/callback",
 		},
 	});
