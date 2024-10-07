@@ -45,5 +45,28 @@ export async function signup(formData: FormData) {
 	}
 
 	revalidatePath("/", "layout");
-	redirect("/email-confirmation");
+	redirect("/");
+}
+
+export async function googleSignIn(formData: FormData) {
+	const supabase = createClient();
+
+	const { data, error } = await (await supabase).auth.signInWithOAuth({
+		provider: "google",
+		options: {
+			redirectTo: "https://blue-bear-gym.netlify.app/auth/callback",
+		},
+	});
+
+	if (data.url) {
+		console.log("data.url", data.url);
+		redirect(data.url); // use the redirect API for your server framework
+	}
+
+	if (error) {
+		throw new Error(error.message);
+	}
+
+	revalidatePath("/", "layout");
+	redirect("/");
 }
