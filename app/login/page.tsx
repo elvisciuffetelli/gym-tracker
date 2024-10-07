@@ -14,9 +14,9 @@ export default function Login() {
 	const handleGoogleSignIn = async () => {
 		const { error } = await supabase.auth.signInWithOAuth({
 			provider: "google",
-			/* 			options: {
-				redirectTo: "https://blue-bear-gym.netlify.app/auth/callback",
-			}, */
+			options: {
+				redirectTo: `${window.location.origin}/auth/callback`,
+			},
 		});
 
 		if (error) {
